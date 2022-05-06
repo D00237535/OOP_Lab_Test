@@ -6,12 +6,16 @@ public class City
 {
     private String name;
     //Add appropriate collection to store connections here
+    private Collection<City> connections;
+
 
     //Complete
     public City(String name)
     {
         this.name = name;
         //Set up collection added above
+
+
     }
 
     //Complete

@@ -8,6 +8,11 @@ public class LottoServiceDetails
     public static final String COMMAND_SEPARATOR = "%";
 
     //Add Command Strings
+    public static final String GENERATE = "generate";
+    public static final String CLOSE = "close";
+
 
     //Add Response Strings
+    public static final String ADD_RESPONSE_SUCCESS = "success";
+    public static final String ADD_RESPONSE_FAILURE = "failure";
 }
