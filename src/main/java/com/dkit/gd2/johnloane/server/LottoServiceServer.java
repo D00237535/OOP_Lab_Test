@@ -10,25 +10,20 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.Random;
 
-public class LottoServiceServer
-{
+public class LottoServiceServer {
     //Set up the listening socket
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         LottoServiceServer server = new LottoServiceServer();
         server.start();
     }
 
-    public void start()
-    {
-        try
-        {
+    public void start() {
+        try {
             ServerSocket ss = new ServerSocket(50007);
 
             int clientNumber = 0;
 
-            while (true)
-            {
+            while (true) {
                 Socket socket = ss.accept();
 
                 clientNumber++;
@@ -41,24 +36,22 @@ public class LottoServiceServer
                 System.out.println("Server: ClientHandler started in thread for client " + clientNumber + ". ");
                 System.out.println("Server: Listening for further connections...");
             }
-        } catch (IOException e)
-        {
+        }
+
+        catch (IOException e) {
             System.out.println("Server: IOException: " + e);
         }
         System.out.println("Server: Server exiting, Goodbye!");
     }
 
-    public class ClientHandler implements Runnable
-    {
+    public class ClientHandler implements Runnable {
         BufferedReader socketReader;
         PrintWriter socketWriter;
         Socket socket;
         int clientNumber;
 
-        public ClientHandler(Socket clientSocket, int clientNumber)
-        {
-            try
-            {
+        public ClientHandler(Socket clientSocket, int clientNumber) {
+            try {
                 InputStreamReader isReader = new InputStreamReader(clientSocket.getInputStream());
                 this.socketReader = new BufferedReader(isReader);
 
@@ -69,8 +62,7 @@ public class LottoServiceServer
 
                 this.socket = clientSocket;
 
-            } catch (IOException ex)
-            {
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
@@ -78,29 +70,22 @@ public class LottoServiceServer
         //Do the main logic of the server
 
         @Override
-        public void run()
-        {
+        public void run() {
             String message;
-            try
-            {
-                while ((message = socketReader.readLine()) != null)
-                {
+            try {
+                while ((message = socketReader.readLine()) != null) {
                     System.out.println("Server: (ClientHandler): Read command from client " + clientNumber + ": " + message);
 
-                    if (message.startsWith("Generate"))
-                    {
+                    if (message.startsWith("Generate")) {
                         message = message.substring(8);
 
                         Random rd = new Random();
                         int[] lottoNumbers = new int[6];
 
-                        for (int i = 0; i < 6; i++)
-                        {
+                        for (int i = 0; i < 6; i++) {
                             lottoNumbers[i] = rd.nextInt(47) + 1;
-                            for (int j = 0; j < i; j++)
-                            {
-                                if (lottoNumbers[i] == lottoNumbers[j])
-                                {
+                            for (int j = 0; j < i; j++) {
+                                if (lottoNumbers[i] == lottoNumbers[j]) {
                                     i--;
                                     break;
                                 }
@@ -109,8 +94,8 @@ public class LottoServiceServer
                         message = Arrays.toString(lottoNumbers);
                         socketWriter.println(message);
                     }
-                    else if (message.startsWith("Close"))
-                    {
+
+                    else if (message.startsWith("Close")) {
                         message = message.substring(5);
 
                         message = "Server: (ClientHandler): Client " + clientNumber + " has closed the connection.";
@@ -118,16 +103,15 @@ public class LottoServiceServer
                         socket.close();
                         break;
                     }
-                    else
-                    {
+
+                    else {
                         socketWriter.println("I'm sorry I don't understand :(");
                     }
                 }
 
                 socket.close();
 
-            } catch (IOException ex)
-            {
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
             System.out.println("Server: (ClientHandler): Handler for Client " + clientNumber + " is terminating .....");
